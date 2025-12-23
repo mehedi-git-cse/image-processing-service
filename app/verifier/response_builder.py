@@ -1,4 +1,4 @@
-def build_response(face, eyes, quality, pose, lighting, bg, geometry):
+def build_response(face, eyes, quality, pose, lighting, bg, geometry, text):
     """
     Build flexible, score-based verification response.
     
@@ -7,7 +7,7 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry):
 
     # Assign points for each criterion
     score = 0
-    max_score = 7
+    max_score = 8
 
     if face.get("face_detected", False):
         score += 1
@@ -31,8 +31,11 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry):
     if geometry.get("geometry_ok", False):
         score += 1
 
+    if text.get("text_ok", False):
+        score += 1
+
     # Define passing threshold (can be adjusted)
-    passing_threshold = 6
+    passing_threshold = 7
 
     passed = score >= passing_threshold
 
@@ -47,6 +50,7 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry):
             "pose": pose,
             "lighting": lighting,
             "background": bg,
-            "geometry": geometry
+            "geometry": geometry,
+            "text": text
         }
     }

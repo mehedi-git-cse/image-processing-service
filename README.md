@@ -40,6 +40,37 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+1️⃣ Install Tesseract OCR
+
+Download the installer from: https://github.com/tesseract-ocr/tesseract
+https://github.com/UB-Mannheim/tesseract/wiki
+ → Go to Windows release section.
+ Video for setup in windows mechine 
+ https://www.youtube.com/watch?v=2kWvk4C1pMo
+
+Install it, e.g., in:
+
+C:\Program Files\Tesseract-OCR
+
+
+Make sure tesseract.exe exists in that folder.
+
+2️⃣ Add Tesseract to your PATH (optional but recommended)
+
+Open Environment Variables → Edit Path → Add:
+
+C:\Program Files\Tesseract-OCR
+
+
+Restart your terminal/IDE.
+
+3️⃣ Specify Tesseract path in your code (safer)
+import pytesseract
+
+# Set the path to tesseract.exe
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+
 3. Run the app with Uvicorn:
 
 ```bash
