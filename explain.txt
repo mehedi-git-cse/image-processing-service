@@ -1,0 +1,62 @@
+image processing workflow
+
+1️⃣ detect_face(img)
+
+    👉 কী করে:
+    1.Image এ মুখ আছে কিনা detect করে
+    2.Face count (১টা না একাধিক)
+    3.Face position
+
+    📌 Face না থাকলে verification fail
+
+2️⃣ check_eyes(img)
+
+    👉 চোখ:
+    1.খোলা নাকি বন্ধ
+    2.দুই চোখ আছে কিনা
+    3.Eye alignment
+
+    📌 Passport / KYC requirement
+
+3️⃣ check_quality(img)
+
+    👉 Image quality check:
+    1.Blur
+    2.Resolution
+    3.Noise
+
+    📌 Low quality হলে reject
+
+4️⃣ check_head_pose(img)
+
+    👉 Head orientation:
+    1.Front-facing কিনা
+    2.Left / Right / Up / Down angle
+
+    📌 Side face reject
+
+5️⃣ check_lighting(img)
+
+    👉 আলো:
+    1.Overexposed
+    2.Underexposed
+    3.Shadow detection
+
+    📌 Proper lighting না হলে reject
+
+6️⃣ check_background(img)
+
+    👉 Background:
+    Plain background
+    Clutter / object detect
+
+    📌 Official ID standard match
+
+7️⃣ check_face_geometry(img)
+
+    👉 Face structure:
+    1.Face ratio
+    2.Distance between eyes
+    3.Chin / forehead alignment
+
+    📌 Biometric standard compliance

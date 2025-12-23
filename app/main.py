@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.exceptions import RequestValidationError
 
 from app.utils.security import verify_api_key_plain
@@ -12,7 +12,13 @@ app = FastAPI(title="Image Verification Service")
 
 # ================= Auth Routes =================
 @app.post("/api/v1/get-token")
-def get_token(req: TokenRequest):
+async def get_token(request: Request,req: TokenRequest):
+    # For debugging purposes: log raw body and headers
+    # body = await request.body()
+    # headers = dict(request.headers)
+    # print("Raw body:", body)
+    # print("Headers:", headers)
+
     return generate_token(req)
 
 # ================= Face Verification =================
