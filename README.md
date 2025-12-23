@@ -27,11 +27,11 @@
 1. Create and activate a virtual environment (optional but recommended):
 
 ```bash
-python -m venv .venv
+python -m venv venv
 # Windows
 .\.venv\Scripts\activate
 # macOS / Linux
-source .venv/bin/activate
+source venv/bin/activate
 ```
 
 2. Install dependencies:
