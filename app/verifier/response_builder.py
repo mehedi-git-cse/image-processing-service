@@ -40,7 +40,7 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry, text):
     passed = score >= passing_threshold
 
     return {
-        "status": "passed" if passed else "failed",
+        "image_status": "passed" if passed else "failed",
         "score": score,
         "max_score": max_score,
         "details": {

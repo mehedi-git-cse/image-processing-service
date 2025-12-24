@@ -85,11 +85,22 @@ Swagger UI: http://127.0.0.1:8000/docs
 
 ## 🐳 Docker
 
-Build and run the container:
+Run with Docker Compose (recommended for development — mounts local code and enables live reload):
+
+```bash
+# First run (build required)
+docker compose up --build
+# Afterwards you can start without rebuilding:
+docker compose up
+```
+
+The compose file mounts your project into the container and runs Uvicorn with `--reload`, so changes to code are picked up automatically. The API will be available at: http://localhost:7000
+
+Alternate: classic Docker build and run (if you prefer):
 
 ```bash
 docker build -t image-verification-service .
-docker run -p 8000:8000 image-verification-service
+docker run -p 7000:8000 image-verification-service
 ```
 
 ---
