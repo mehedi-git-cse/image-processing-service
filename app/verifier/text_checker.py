@@ -41,8 +41,8 @@ def check_text_presence(image_bytes: bytes):
     ratio = round(text_area / img_area, 4)
 
     return {
-        "text_detected1": word_count > 0,
-        "word_count2": word_count,
+        "text_detected": word_count > 0,
+        "word_count": word_count,
         "text_area_ratio": ratio,
         "text_ok": ratio < TEXT_AREA_THRESHOLD
     }

@@ -2,28 +2,23 @@ version: "3.8"
 
 services:
   app:
-    container_name: image-verification-service
+    container_name: image-verification-service-prod
+
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
 
     command: >
       uvicorn app.main:app
       --host 0.0.0.0
       --port 8000
-      --reload
-      --reload-dir /app
-      --reload-delay 0.2
+      --workers 4
 
     ports:
       - "7000:8000"
 
-    volumes:
-      - .:/app
-
     environment:
       PYTHONUNBUFFERED: 1
       PYTHONDONTWRITEBYTECODE: 1
-      WATCHFILES_FORCE_POLLING: "true"
 
-    restart: unless-stopped
+    restart: always
