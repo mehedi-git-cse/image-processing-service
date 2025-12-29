@@ -3,6 +3,7 @@ from fastapi.exceptions import RequestValidationError
 
 from app.utils.security import verify_api_key_plain
 from app.utils.exception_handler import validation_exception_handler
+from app.utils.response import error
 
 from app.controllers.auth_controller import TokenRequest, generate_token
 from app.controllers.face_verification_controller import verify_face_image
@@ -27,6 +28,15 @@ async def verify_face(
     image: UploadFile = File(...),
     authorization: str | None = Header(default=None)
 ):
+    # Validate uploaded file is JPG/JPEG/PNG
+    allowed_exts = {"jpg", "jpeg", "png"}
+    filename = (image.filename or "").lower()
+    ext = filename.rsplit('.', 1)[-1] if '.' in filename else ''
+    content_type = (getattr(image, "content_type", "") or "").lower()
+
+    if ext not in allowed_exts or not content_type.startswith("image/"):
+        return error(msg="Uploaded file must be a JPG or PNG image", status_code=400)
+
     auth_result = verify_api_key_plain(authorization)
 
     # If auth failed → response engine returned
