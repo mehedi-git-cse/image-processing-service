@@ -10,3 +10,8 @@ python-multipart
 pyjwt
 pytesseract
 scikit-learn
+
+# YOLOv8 (NEW)
+#ultralytics
+#torch
+#torchvision
