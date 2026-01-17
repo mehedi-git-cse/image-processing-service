@@ -11,6 +11,7 @@ from app.verifier.background_checker import check_background
 from app.verifier.geometry_checker import check_face_geometry
 from app.verifier.response_builder import build_response
 from app.verifier.text_checker import check_text_presence
+from app.verifier.background_uniform_checker import check_background_uniform_color
 
 
 async def verify_face_image(image: UploadFile):
@@ -33,7 +34,8 @@ async def verify_face_image(image: UploadFile):
             check_lighting(img),
             check_background(img),
             check_face_geometry(img),
-            check_text_presence(img)
+            check_text_presence(img),
+            check_background_uniform_color(img)
         )
 
         # Success response

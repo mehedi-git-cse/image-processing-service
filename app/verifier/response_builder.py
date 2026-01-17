@@ -1,13 +1,13 @@
-def build_response(face, eyes, quality, pose, lighting, bg, geometry, text):
+def build_response(face, eyes, quality, pose, lighting, bg, geometry, text, bg_uniform):
     """
     Build flexible, score-based verification response.
     
-    Each check gives 1 point if passed. Minimum points required to pass = 6 (adjustable).
+    Each check gives 1 point if passed. Minimum points required to pass = 7 (adjustable).
     """
 
     # Assign points for each criterion
     score = 0
-    max_score = 8
+    max_score = 9
 
     if face.get("face_detected", False):
         score += 1
@@ -34,6 +34,9 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry, text):
     if text.get("text_ok", False):
         score += 1
 
+    if bg_uniform.get("background_uniform", False):
+        score += 1
+
     # Define passing threshold (can be adjusted)
     passing_threshold = 7
 
@@ -51,6 +54,7 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry, text):
             "lighting": lighting,
             "background": bg,
             "geometry": geometry,
-            "text": text
+            "text": text,
+            "background_uniform": bg_uniform
         }
     }

@@ -9,3 +9,4 @@ pillow
 python-multipart
 pyjwt
 pytesseract
+scikit-learn
