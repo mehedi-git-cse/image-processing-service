@@ -1,4 +1,4 @@
-def build_response(face, eyes, quality, pose, lighting, bg, geometry, text, bg_uniform):
+def build_response(face, eyes, quality, pose, lighting, bg, geometry, text, object_detector, human_only, hands):
     """
     Build flexible, score-based verification response.
     
@@ -7,7 +7,7 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry, text, bg_u
 
     # Assign points for each criterion
     score = 0
-    max_score = 9
+    max_score = 11
 
     if face.get("face_detected", False):
         score += 1
@@ -34,11 +34,17 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry, text, bg_u
     if text.get("text_ok", False):
         score += 1
 
-    if bg_uniform.get("background_uniform", False):
+    if object_detector.get("non_human_object_present", False) is False:
+        score += 1
+    
+    if human_only.get("status") == "PASS":
+        score += 1
+    
+    if hands.get("is_ok", False):
         score += 1
 
     # Define passing threshold (can be adjusted)
-    passing_threshold = 7
+    passing_threshold = 8
 
     passed = score >= passing_threshold
 
@@ -55,6 +61,8 @@ def build_response(face, eyes, quality, pose, lighting, bg, geometry, text, bg_u
             "background": bg,
             "geometry": geometry,
             "text": text,
-            "background_uniform": bg_uniform
+            "hands": hands,
+            "object_detector": object_detector,
+            "human_only": human_only
         }
     }

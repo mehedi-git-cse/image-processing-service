@@ -1,10 +1,21 @@
 import cv2
 import numpy as np
-from ultralytics import YOLO
+
+# Lazy load model (to avoid numpy/torch initialization issues)
+MODEL = None
 
 
-# Load once (IMPORTANT for production)
-MODEL = YOLO("yolov8n-seg.pt")  # nano = CPU optimized
+def _get_model():
+    """Lazy load YOLO model on first use"""
+    global MODEL
+    if MODEL is None:
+        from ultralytics import YOLO
+        try:
+            MODEL = YOLO("yolov8n-seg.pt")  # nano = CPU optimized
+        except Exception as e:
+            print(f"ERROR loading YOLO model: {e}")
+            raise
+    return MODEL
 
 
 def check_non_human_object_yolo(image_bytes,
@@ -37,7 +48,8 @@ def check_non_human_object_yolo(image_bytes,
         img_area = h * w
 
         # YOLO inference (CPU)
-        results = MODEL.predict(
+        model = _get_model()
+        results = model.predict(
             source=img,
             conf=conf_threshold,
             device="cpu",

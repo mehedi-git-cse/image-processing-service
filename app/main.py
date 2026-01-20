@@ -11,6 +11,26 @@ from fastapi import Header, UploadFile, File
 
 app = FastAPI(title="Image Verification Service")
 
+# ================= Health Check Routes =================
+@app.get("/")
+async def root():
+    """
+    Root endpoint - Health check
+    Returns service status and documentation links
+    """
+    return {
+        "status": "running",
+        "service": "Image Verification Service",
+        "message": "✅ Image Processing Service is running",
+        "version": "1.0.0",
+        "documentation": "http://localhost:8000/docs",
+        "redoc": "http://localhost:8000/redoc",
+        "endpoints": {
+            "get_token": "POST /api/v1/get-token",
+            "verify_face": "POST /api/v1/verify-face"
+        }
+    }
+
 # ================= Auth Routes =================
 @app.post("/api/v1/get-token")
 async def get_token(request: Request,req: TokenRequest):

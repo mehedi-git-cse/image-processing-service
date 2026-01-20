@@ -4,14 +4,12 @@ watchgod
 watchfiles
 opencv-python
 mediapipe==0.10.9
-numpy
+numpy>=1.24.0,<2.0
 pillow
 python-multipart
 pyjwt
 pytesseract
 scikit-learn
-
-# YOLOv8 (NEW)
-#ultralytics
-#torch
-#torchvision
+ultralytics
+torch==2.0.1
+torchvision==0.15.2

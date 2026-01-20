@@ -1,9 +1,8 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
-# Set working directory
 WORKDIR /app
 
-# Install system dependencies (OpenCV + Tesseract)
+# System dependencies (minimal but sufficient)
 RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
@@ -15,9 +14,12 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Copy requirements first (cache friendly)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Install dependencies with CPU-only torch
+RUN pip install --upgrade pip setuptools wheel \
+ && pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
 
 # Copy app source (will be overridden by volume in dev)
 COPY . .
