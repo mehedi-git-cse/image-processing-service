@@ -8,8 +8,17 @@ from app.utils.response import error
 from app.controllers.auth_controller import TokenRequest, generate_token
 from app.controllers.face_verification_controller import verify_face_image
 from fastapi import Header, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Image Verification Service")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ================= Health Check Routes =================
 @app.get("/")
