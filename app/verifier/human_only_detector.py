@@ -5,6 +5,15 @@ import numpy as np
 MODEL = None
 ALLOWED_CLASS = "person"
 
+# Clothing / wearable accessories that are legitimately worn by a person
+# in a formal photo. These must NOT be counted as "non-human objects".
+WEARABLE_CLASSES = {
+    "tie",
+    "necktie",
+    "backpack",   # can be worn
+    "handbag",    # edge case - usually not held in formal photo but often misdetected from clothing
+}
+
 
 def _get_model():
     """Lazy load YOLO model on first use"""
@@ -21,10 +30,10 @@ def _get_model():
 
 def check_human_only(image_bytes, conf_threshold=0.4):
     """
-    FAIL if any object other than 'person' is detected
+    FAIL if any object other than 'person' or worn clothing is detected.
     """
 
-    print( "Running human-only detection..." )
+    print("Running human-only detection...")
 
     img = cv2.imdecode(np.frombuffer(image_bytes, np.uint8), cv2.IMREAD_COLOR)
     if img is None:
@@ -48,7 +57,11 @@ def check_human_only(image_bytes, conf_threshold=0.4):
         if class_name == "person":
             person_count += 1
 
-    non_human_objects = [x for x in detected if x != ALLOWED_CLASS]
+    # Ignore both "person" and any wearable accessories
+    non_human_objects = [
+        x for x in detected
+        if x != ALLOWED_CLASS and x not in WEARABLE_CLASSES
+    ]
 
     if person_count != 1:
         return _fail(f"Invalid number of persons detected: {person_count}")

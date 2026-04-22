@@ -4,6 +4,15 @@ import numpy as np
 # Lazy load model (to avoid numpy/torch initialization issues)
 MODEL = None
 
+# Wearable accessories that should NOT be flagged as "non-human objects"
+# in a formal/portrait photo.
+WEARABLE_CLASSES = {
+    "tie",
+    "necktie",
+    "backpack",
+    "handbag",
+}
+
 
 def _get_model():
     """Lazy load YOLO model on first use"""
@@ -22,20 +31,8 @@ def check_non_human_object_yolo(image_bytes,
                                 conf_threshold: float = 0.4,
                                 min_object_area_ratio: float = 0.005):
     """
-    Detect whether any non-human object is present using YOLOv8 segmentation.
-
-    Args:
-        image_bytes: image in bytes
-        conf_threshold: detection confidence threshold
-        min_object_area_ratio: ignore very small objects
-
-    Returns:
-        dict:
-        {
-            "non_human_object_present": bool,
-            "detected_objects": list,
-            "reason": str
-        }
+    Detect whether any non-human, non-wearable object is present using
+    YOLOv8 segmentation.
     """
 
     try:
@@ -69,8 +66,8 @@ def check_non_human_object_yolo(image_bytes,
             class_id = int(cls)
             class_name = MODEL.names[class_id]
 
-            # Ignore humans
-            if class_name == "person":
+            # Ignore humans and worn accessories
+            if class_name == "person" or class_name in WEARABLE_CLASSES:
                 continue
 
             # Area filtering

@@ -99,8 +99,8 @@ def check_hands(image_bytes):
             return {
                 "hands_detected": True,
                 "hand_position": "visible",
-                "is_ok": True,
-                "reason": "Hands visible but not covering face"
+                "is_ok": False,
+                "reason": "Hand is visible in frame - you may be holding an object. Please keep hands down and out of the photo."
             }
         
         return _pass("No problematic hand positions detected")

@@ -5,7 +5,8 @@ import pytesseract
 # For Linux, no need to set tesseract_cmd if installed via apt
 # pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 
-TEXT_AREA_THRESHOLD = 0.06  # 6%
+TEXT_AREA_THRESHOLD = 0.02  # 2%
+OCR_CONF_THRESHOLD = 40      # Lower confidence to catch stylized / small text on IDs, passports, logos
 
 def check_text_presence(image_bytes: bytes):
     # Convert bytes to numpy array and decode image
@@ -32,8 +33,8 @@ def check_text_presence(image_bytes: bytes):
         except ValueError:
             conf = 0
 
-        # Only count words with confidence > 60 and non-empty text
-        if conf > 60 and text != "":
+        # Only count words with sufficient confidence and non-empty text
+        if conf > OCR_CONF_THRESHOLD and text != "":
             x, y, bw, bh = data["left"][i], data["top"][i], data["width"][i], data["height"][i]
             text_area += bw * bh
             word_count += 1

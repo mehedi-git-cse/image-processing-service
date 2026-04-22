@@ -15,6 +15,8 @@ from app.verifier.text_checker import check_text_presence
 from app.verifier.object_detector import check_non_human_object_yolo
 from app.verifier.human_only_detector import check_human_only
 from app.verifier.hand_detector import check_hands
+from app.verifier.ai_image_detector import check_ai_generated
+from app.verifier.document_detector import check_held_document
 
 
 async def verify_face_image(image: UploadFile):
@@ -29,7 +31,7 @@ async def verify_face_image(image: UploadFile):
             )
 
         # Run all checks in parallel (async)
-        face, eyes, quality, pose, lighting, bg, geometry, text, obj_detect, human, hands = await asyncio.gather(
+        face, eyes, quality, pose, lighting, bg, geometry, text, obj_detect, human, hands, ai_check, doc_check = await asyncio.gather(
             asyncio.to_thread(detect_face, img),
             asyncio.to_thread(check_eyes, img),
             asyncio.to_thread(check_quality, img),
@@ -40,11 +42,14 @@ async def verify_face_image(image: UploadFile):
             asyncio.to_thread(check_text_presence, img),
             asyncio.to_thread(check_non_human_object_yolo, img),
             asyncio.to_thread(check_human_only, img),
-            asyncio.to_thread(check_hands, img)
+            asyncio.to_thread(check_hands, img),
+            asyncio.to_thread(check_ai_generated, img),
+            asyncio.to_thread(check_held_document, img),
         )
-        
+
         result = build_response(
-            face, eyes, quality, pose, lighting, bg, geometry, text, obj_detect, human, hands
+            face, eyes, quality, pose, lighting, bg, geometry, text,
+            obj_detect, human, hands, ai_check, doc_check
         )
 
         # Success response
