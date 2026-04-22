@@ -1,13 +1,12 @@
-from fastapi import FastAPI, File, UploadFile, Request
+from fastapi import FastAPI, File, UploadFile, Request, Header
 from fastapi.exceptions import RequestValidationError
 
 from app.utils.security import verify_api_key_plain
 from app.utils.exception_handler import validation_exception_handler
-from app.utils.response import error
+from app.utils.file_validation import validate_uploaded_image
 
 from app.controllers.auth_controller import TokenRequest, generate_token
 from app.controllers.face_verification_controller import verify_face_image
-from fastapi import Header, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Image Verification Service")
@@ -57,14 +56,9 @@ async def verify_face(
     image: UploadFile = File(...),
     authorization: str | None = Header(default=None)
 ):
-    # Validate uploaded file is JPG/JPEG/PNG
-    allowed_exts = {"jpg", "jpeg", "png"}
-    filename = (image.filename or "").lower()
-    ext = filename.rsplit('.', 1)[-1] if '.' in filename else ''
-    content_type = (getattr(image, "content_type", "") or "").lower()
-
-    if ext not in allowed_exts or not content_type.startswith("image/"):
-        return error(msg="Uploaded file must be a JPG or PNG image", status_code=400)
+    validation_error = await validate_uploaded_image(image)
+    if validation_error:
+        return validation_error
 
     auth_result = verify_api_key_plain(authorization)
 
